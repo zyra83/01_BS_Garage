@@ -31,18 +31,22 @@ public class Voiture implements Serializable {
 	UUID id;
 	@Getter
 	@Setter
-	@PastDate(message="La date est forcément passée.")
+	@PastDate(message = "La date est forcément passée.")
 	LocalDate miseEnCirculation;
 	@Getter
 	@Setter
 	String modele;
 	@Getter
 	@Setter
-	@Min(value=0, message="La puissance est forcement positive.")
+	@Min(value = 0, message = "La puissance est forcement positive.")
 	int puissance;
 	@Getter
 	@Setter
-	@Pattern(regexp="[A-Z]{2}-\\d{3}-[A-Z]{2}", message="L'immat doit être de la forme AA-123-BB.")
+	@Pattern(regexp = "[A-Z]{2}-\\d{3}-[A-Z]{2}", message = "L'immat doit être de la forme AA-123-BB.")
 	String immatriculation;
+
+	@Getter
+	@Setter
+	Marque marque;
 
 }

@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import garage.model.dao.DaoFactory;
 import garage.model.dao.DaoVoiture;
 import garage.model.dao.exceptions.DaoException;
 import garage.model.entities.Voiture;
@@ -35,6 +36,7 @@ public class DaoVoitureJdbc implements DaoVoiture<Voiture, String> {
 			stmt.setObject(3, t.getModele(), Types.VARCHAR);
 			stmt.setObject(4, t.getPuissance(), Types.INTEGER);
 			stmt.setObject(5, t.getImmatriculation(), Types.VARCHAR);
+			stmt.setObject(6, t.getMarque().getId(), Types.VARCHAR);
 
 			stmt.executeUpdate();
 
@@ -58,7 +60,8 @@ public class DaoVoitureJdbc implements DaoVoiture<Voiture, String> {
 			resultSet.next();
 			Voiture retour = new Voiture(UUID.fromString(resultSet.getString(1)),
 					LocalDate.parse(resultSet.getString(2), DateTimeFormatter.ISO_LOCAL_DATE), resultSet.getString(3),
-					resultSet.getInt(4), resultSet.getString(5));
+					resultSet.getInt(4), resultSet.getString(5),
+					DaoFactory.fabriquerDaoMarque().read(resultSet.getString(6)));
 			return retour;
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -93,6 +96,7 @@ public class DaoVoitureJdbc implements DaoVoiture<Voiture, String> {
 			stmt.setObject(i++, t.getModele(), Types.VARCHAR);
 			stmt.setObject(i++, t.getPuissance(), Types.INTEGER);
 			stmt.setObject(i++, t.getImmatriculation(), Types.VARCHAR);
+			stmt.setObject(i++, t.getMarque().getId(), Types.VARCHAR);
 			stmt.setObject(i++, t.getId(), Types.VARCHAR);
 
 			stmt.executeUpdate();
@@ -116,7 +120,8 @@ public class DaoVoitureJdbc implements DaoVoiture<Voiture, String> {
 			while (resultSet.next()) {
 				v = new Voiture(UUID.fromString(resultSet.getString(1)),
 						LocalDate.parse(resultSet.getString(2), DateTimeFormatter.ISO_LOCAL_DATE),
-						resultSet.getString(3), resultSet.getInt(4), resultSet.getString(5));
+						resultSet.getString(3), resultSet.getInt(4), resultSet.getString(5),
+						DaoFactory.fabriquerDaoMarque().read(resultSet.getString(6)));
 				retour.add(v);
 			}
 
@@ -137,13 +142,13 @@ public class DaoVoitureJdbc implements DaoVoiture<Voiture, String> {
 	}
 
 	@Override
-	public List<Voiture> readByModele(String modele) {
+	public List<Voiture> readByModele(String modele) throws DaoException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public List<Voiture> readAllSortByPuissance() {
+	public List<Voiture> readAllSortByPuissance() throws DaoException {
 		List<Voiture> retour = new ArrayList<>();
 		Voiture v;
 		try (Connection connection = DButils.obtenirConnection(CONF_BDD_PROPERTIES)) {
@@ -154,7 +159,8 @@ public class DaoVoitureJdbc implements DaoVoiture<Voiture, String> {
 			while (resultSet.next()) {
 				v = new Voiture(UUID.fromString(resultSet.getString(1)),
 						LocalDate.parse(resultSet.getString(2), DateTimeFormatter.ISO_LOCAL_DATE),
-						resultSet.getString(3), resultSet.getInt(4), resultSet.getString(5));
+						resultSet.getString(3), resultSet.getInt(4), resultSet.getString(5),
+						DaoFactory.fabriquerDaoMarque().read(resultSet.getString(6)));
 				retour.add(v);
 			}
 
