@@ -2,7 +2,9 @@ package garage.model.entities;
 
 import java.time.LocalDate;
 
+import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Pattern;
 
@@ -20,6 +22,8 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuppressWarnings("serial")
+@Entity
+@Table(name = "VOITURE")
 public class Voiture extends AbstractEntity {
 
 	@Getter

@@ -10,7 +10,9 @@ import garage.model.dao.exceptions.DaoException;
 import garage.model.entities.Marque;
 
 public class TestMarqueDao {
-
+	// MEP logger
+	
+	
 	@Test
 	public void testReadAll() throws DaoException {
 		List<Marque> readAll = DaoFactory.fabriquerDaoMarque().readAll();

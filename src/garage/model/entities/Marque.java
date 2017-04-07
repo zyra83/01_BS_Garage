@@ -1,5 +1,8 @@
 package garage.model.entities;
 
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,6 +16,8 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuppressWarnings("serial")
+@Entity
+@Table(name = "MARQUE")
 public class Marque extends AbstractEntity {
 
 	@Getter

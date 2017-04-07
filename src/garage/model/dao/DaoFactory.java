@@ -1,7 +1,7 @@
 package garage.model.dao;
 
-import garage.model.dao.jdbc.DaoMarqueJdbc;
-import garage.model.dao.jdbc.DaoVoitureJdbc;
+import garage.model.dao.jdbc.DaoMarqueJPA;
+import garage.model.dao.jdbc.DaoVoitureJPA;
 import garage.model.entities.Marque;
 import garage.model.entities.Voiture;
 
@@ -11,10 +11,10 @@ public final class DaoFactory {
 	}
 
 	public static DaoVoiture<Voiture, String> fabriquerDaoVoiture() {
-		return new DaoVoitureJdbc();
+		return new DaoVoitureJPA();
 	}
 
 	public static DaoMarque<Marque, String> fabriquerDaoMarque() {
-		return new DaoMarqueJdbc();
+		return new DaoMarqueJPA();
 	}
 }
