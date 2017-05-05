@@ -25,6 +25,7 @@ public class PresenterPrincipal {
 
 				case 1: // Ajouter une voiture
 					fm.creerVoiture(ihm.saisirNouvelleVoiture());
+					break;
 				case 2: // Supprimer une voiture
 					fm.supprimerVoiture(ihm.choisirVoiture(fm.listerLesVoitures()));
 					break;

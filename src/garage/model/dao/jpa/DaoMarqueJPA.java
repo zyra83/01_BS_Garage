@@ -1,4 +1,4 @@
-package garage.model.dao.jdbc;
+package garage.model.dao.jpa;
 
 import java.util.List;
 import java.util.UUID;

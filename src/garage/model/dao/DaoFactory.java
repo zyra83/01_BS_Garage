@@ -1,7 +1,7 @@
 package garage.model.dao;
 
-import garage.model.dao.jdbc.DaoMarqueJPA;
-import garage.model.dao.jdbc.DaoVoitureJPA;
+import garage.model.dao.jpa.DaoMarqueJPA;
+import garage.model.dao.jpa.DaoVoitureJPA;
 import garage.model.entities.Marque;
 import garage.model.entities.Voiture;
 

@@ -1,11 +1,11 @@
 package garage.model.facade;
 
 public final class FacadeFactory {
-	public FacadeFactory() {
-		// TODO Auto-generated constructor stub
+
+	private FacadeFactory() {
 	}
-	
-	public static IFacadeMetier fabriquerFacadeMetier(){
+
+	public static IFacadeMetier fabriquerFacadeMetier() {
 		return new FacadeMetier();
 	}
 }

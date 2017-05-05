@@ -1,11 +1,19 @@
 package garage.model.facade;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
 
 import garage.model.dao.DaoFactory;
 import garage.model.dao.exceptions.DaoException;
 import garage.model.entities.Voiture;
+import lombok.extern.apachecommons.CommonsLog;
 
+@CommonsLog
 public class FacadeMetier implements IFacadeMetier {
 
 	public FacadeMetier() {
@@ -14,6 +22,19 @@ public class FacadeMetier implements IFacadeMetier {
 
 	@Override
 	public void creerVoiture(Voiture v) throws DaoException {
+		
+
+		// Pour valider v j'ai besoin d'une instance de validator.
+		Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+		Set<ConstraintViolation<Voiture>> set = validator.validate(v);
+
+		log.info(set.size());
+
+		for (ConstraintViolation<Voiture> constraintViolation : set) {
+			log.warn(constraintViolation.getMessage());
+			log.warn(constraintViolation.getInvalidValue().toString());
+		}
+		
 		DaoFactory.fabriquerDaoVoiture().create(v);
 	}
 
