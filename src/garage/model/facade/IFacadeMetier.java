@@ -3,6 +3,7 @@ package garage.model.facade;
 import java.util.List;
 
 import garage.model.dao.exceptions.DaoException;
+import garage.model.entities.Marque;
 import garage.model.entities.Voiture;
 
 public interface IFacadeMetier {
@@ -50,6 +51,7 @@ public interface IFacadeMetier {
 	 */
 	void mettreAjourUneVoiture(Voiture v) throws DaoException;
 
-	
+	List<Marque> listerLesMarques() throws DaoException;
+
 
 }

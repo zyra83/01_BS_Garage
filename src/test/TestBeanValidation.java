@@ -9,7 +9,11 @@ import javax.validation.Validator;
 
 import org.junit.Test;
 
+import garage.model.dao.exceptions.DaoException;
 import garage.model.entities.Voiture;
+import garage.model.facade.FacadeFactory;
+import garage.model.facade.FacadeMetier;
+import garage.model.facade.IFacadeMetier;
 
 public class TestBeanValidation {
 
@@ -41,6 +45,18 @@ public class TestBeanValidation {
 		 * (DaoException e) { // TODO Auto-generated catch block
 		 * e.printStackTrace(); }
 		 */
+	}
+
+	@Test
+	public void testDeleteBeanValidation() throws DaoException {
+
+		
+		IFacadeMetier fm = FacadeFactory.fabriquerFacadeMetier();
+		
+		Voiture v = fm.listerLesVoitures().get(0);
+		
+		fm.supprimerVoiture(v);
+		
 	}
 
 }

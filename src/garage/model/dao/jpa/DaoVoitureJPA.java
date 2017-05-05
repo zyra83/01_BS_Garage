@@ -4,20 +4,21 @@ import java.util.List;
 import java.util.UUID;
 
 import javax.persistence.EntityManager;
-import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import garage.model.dao.DaoVoiture;
+import garage.model.dao.JPAUtils;
 import garage.model.dao.exceptions.DaoException;
 import garage.model.entities.Voiture;
 
 public class DaoVoitureJPA implements DaoVoiture<Voiture, String> {
-	private static final EntityManager em = Persistence.createEntityManagerFactory("01BS_Garage").createEntityManager();
+	private static final EntityManager em = JPAUtils.getEm("01BS_Garage");
 	public static final Log LOG = LogFactory.getLog(DaoVoitureJPA.class.getSimpleName());
-
+	
+	
 	@Override
 	public void create(Voiture t) throws DaoException {
 		em.getTransaction().begin();
@@ -84,7 +85,7 @@ public class DaoVoitureJPA implements DaoVoiture<Voiture, String> {
 	@Override
 	public List<Voiture> readAllSortByPuissance() throws DaoException {
 		try {
-			TypedQuery<Voiture> v = em.createQuery("SELECT v FROM Voiture v ORDER BY ", Voiture.class);
+			TypedQuery<Voiture> v = em.createQuery("SELECT v FROM Voiture v ORDER BY v.puissance", Voiture.class);
 			return v.getResultList();
 		} catch (Exception e) {
 			throw new DaoException(e.getMessage(), e);

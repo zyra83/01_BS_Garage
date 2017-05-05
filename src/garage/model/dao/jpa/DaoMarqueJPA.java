@@ -8,11 +8,12 @@ import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
 
 import garage.model.dao.DaoMarque;
+import garage.model.dao.JPAUtils;
 import garage.model.dao.exceptions.DaoException;
 import garage.model.entities.Marque;
 
 public class DaoMarqueJPA implements DaoMarque<Marque, String> {
-	private static final EntityManager em = Persistence.createEntityManagerFactory("01BS_Garage").createEntityManager();
+	private static final EntityManager em = JPAUtils.getEm("01BS_Garage");
 
 	@Override
 	public Marque read(String k) throws DaoException {

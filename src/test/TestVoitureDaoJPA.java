@@ -13,25 +13,14 @@ import garage.model.entities.VoitureFactory;
 public class TestVoitureDaoJPA {
 
 	@Test
-	public void testInsertionBDD() {
+	public void testInsertionBDD() throws DaoException {
 
 		Marque m = null;
 
-		try {
-			m = DaoFactory.fabriquerDaoMarque().readAll().get(0);
-		} catch (DaoException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+		m = DaoFactory.fabriquerDaoMarque().readAll().get(0);
 
 		Voiture v = VoitureFactory.fabriquerVoiture("Siroco 222", "AA-666-BB", 150, LocalDate.now(), m);
-		System.out.println(v);
-		try {
-			DaoFactory.fabriquerDaoVoiture().create(v);
-		} catch (DaoException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		DaoFactory.fabriquerDaoVoiture().create(v);
 	}
 
 	@Test

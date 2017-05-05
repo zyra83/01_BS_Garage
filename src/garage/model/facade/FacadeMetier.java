@@ -10,6 +10,7 @@ import javax.validation.Validator;
 
 import garage.model.dao.DaoFactory;
 import garage.model.dao.exceptions.DaoException;
+import garage.model.entities.Marque;
 import garage.model.entities.Voiture;
 import lombok.extern.apachecommons.CommonsLog;
 
@@ -61,6 +62,10 @@ public class FacadeMetier implements IFacadeMetier {
 	@Override
 	public void mettreAjourUneVoiture(Voiture v) throws DaoException {
 		DaoFactory.fabriquerDaoVoiture().update(v);
+	}
+	
+	public List<Marque> listerLesMarques() throws DaoException {
+		return DaoFactory.fabriquerDaoMarque().readAll();
 	}
 
 }
