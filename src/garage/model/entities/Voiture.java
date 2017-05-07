@@ -4,6 +4,8 @@ import java.time.LocalDate;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Pattern;
@@ -24,22 +26,24 @@ import lombok.experimental.FieldDefaults;
 @SuppressWarnings("serial")
 @Entity
 @Table(name = "VOITURE")
+@NamedQueries({
+		@NamedQuery(name = "compterVoituresDuneMarque", query = "select count(v.immatriculation) from Voiture v where v.marque= :m") })
 public class Voiture extends AbstractEntity {
 
 	@Getter
 	@Setter
 	@PastDate(message = "La date est forcément passée.")
 	LocalDate miseEnCirculation;
-	
+
 	@Getter
 	@Setter
 	String modele;
-	
+
 	@Getter
 	@Setter
 	@Min(value = 0, message = "La puissance est forcement positive.")
 	int puissance;
-	
+
 	@Getter
 	@Setter
 	@Pattern(regexp = "[A-Z]{2}-\\d{3}-[A-Z]{2}", message = "L'immat doit être de la forme AA-123-BB.")

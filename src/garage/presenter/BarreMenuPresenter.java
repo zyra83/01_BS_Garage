@@ -11,6 +11,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import lombok.extern.apachecommons.CommonsLog;
+
 @CommonsLog
 public class BarreMenuPresenter {
 
@@ -21,8 +22,7 @@ public class BarreMenuPresenter {
 	public void listerVoitures() {
 		// Demander le chargement du FXML de la vue Lister
 		try {
-			VBox vueLister = (VBox) FXMLLoader
-					.load(getClass().getResource("/garage/view/fx/ListeVoitures.fxml"));
+			VBox vueLister = (VBox) FXMLLoader.load(getClass().getResource("/garage/view/fx/ListeVoitures.fxml"));
 
 			// Recuperer une reference de la scene et changer le graphe de scene
 			Scene scene = racine.getScene();
@@ -40,18 +40,18 @@ public class BarreMenuPresenter {
 	public void ajouterVoiture() {
 		// Demander le chargement du FXML de la vue Ajouter
 		try {
-			
+
 			FXMLLoader loader = new FXMLLoader(this.getClass().getResource("/garage/view/fx/AjouterVoiture.fxml"));
-			// TODO Passer une voiture en parametre pour modif 
+			// TODO Passer une voiture en parametre pour modif
 			loader.setController(new CreationPresenter());
-			VBox vueAjouter  = (VBox) loader.load();
-			
+			VBox vueAjouter = (VBox) loader.load();
+
 			// Recuperer une reference de la scene et changer le graphe de scene
 			Scene scene = racine.getScene();
 			scene.setRoot(vueAjouter);
-
 		} catch (IOException e) {
 			Alert a = new Alert(AlertType.ERROR);
+			a.setContentText(e.getMessage());
 			a.showAndWait();
 		}
 

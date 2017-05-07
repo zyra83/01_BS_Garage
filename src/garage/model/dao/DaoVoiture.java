@@ -3,11 +3,15 @@ package garage.model.dao;
 import java.util.List;
 
 import garage.model.dao.exceptions.DaoException;
+import garage.model.entities.Marque;
+import garage.model.entities.Voiture;
 
-public interface DaoVoiture<T, K> extends Dao<T, K> {
+public interface DaoVoiture extends Dao<Voiture, String> {
 
-	public List<T> readByModele(K modele) throws DaoException;
+	public List<Voiture> readByModele(String modele) throws DaoException;
 
-	public List<T> readAllSortByPuissance() throws DaoException;
+	public List<Voiture> readAllSortByPuissance() throws DaoException;
+
+	public long compterVoituresParMarque(Marque m);
 
 }

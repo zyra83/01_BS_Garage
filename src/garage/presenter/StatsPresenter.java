@@ -1,86 +1,44 @@
 package garage.presenter;
 
-import java.io.IOException;
+import java.util.List;
 
-import javafx.application.Platform;
+import garage.model.entities.Marque;
+import garage.model.facade.FacadeFactory;
+import garage.model.facade.IFacadeMetier;
+import garage.model.facade.exceptions.FacadeMetierException;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.chart.PieChart;
+import lombok.extern.apachecommons.CommonsLog;
 
+@CommonsLog
 public class StatsPresenter {
 
-	@FXML
-	private HBox racine;
+	IFacadeMetier fm = FacadeFactory.fabriquerFacadeMetier();
 
 	@FXML
-	public void listerVoitures() {
-		// Demander le chargement du FXML de la vue Lister
+	private PieChart piechart;
+
+	@FXML
+	public void initialize() {
+		ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
+		// Je recup les marques
+		List<Marque> lstMarques;
 		try {
-			AnchorPane vueLister = (AnchorPane) FXMLLoader
-					.load(getClass().getResource("/garage/view/fx/ListerVoitures.fxml"));
-
-			// Recuperer une reference de la scene et changer le graphe de scene
-			Scene scene = racine.getScene();
-			scene.setRoot(vueLister);
-
-		} catch (IOException e) {
-			System.out.println(e);
-			Alert a = new Alert(AlertType.ERROR);
-			a.showAndWait();
-		}
-
-	}
-
-	@FXML
-	public void ajouterVoiture() {
-		// Demander le chargement du FXML de la vue Ajouter
-		try {
-			GridPane vueAjouter = (GridPane) FXMLLoader
-					.load(getClass().getResource("/garage/view/fx/AjouterVoiture.fxml"));
-			// Recuperer une reference de la scene et changer le graphe de scene
-			Scene scene = racine.getScene();
-			scene.setRoot(vueAjouter);
-
-		} catch (IOException e) {
-			Alert a = new Alert(AlertType.ERROR);
-			a.showAndWait();
-		}
-
-	}
-
-	@FXML
-	public void afficherStats() {
-		VBox vueStats;
-		try {
-			vueStats = (VBox) FXMLLoader.load(getClass().getResource("/garage/view/fx/Statistiques.fxml"));
-
-			// Recuperer une reference de la scene et changer le graphe de scene
-			Scene scene = racine.getScene();
-			scene.setRoot(vueStats);
-		} catch (IOException e) {
+			lstMarques = fm.listerLesMarques();
+			// par marque
+			for (Marque marque : lstMarques) {
+				// Je veux le nb de voitures
+				long nb = fm.compterVoituresParMarque(marque);
+				PieChart.Data p = new PieChart.Data(marque.getNom(), nb);
+				pieChartData.add(p);
+				log.info(String.format("Marque: %s -> nb:%s", marque.getNom(), nb));
+			}
+			piechart.setData(pieChartData);
+		} catch (FacadeMetierException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-	}
-
-	@FXML
-	public void infDialAPropos() {
-		Alert alert = new Alert(AlertType.INFORMATION);
-		alert.setTitle("Information Dialog");
-		alert.setHeaderText("Copyright");
-		alert.setContentText("Made by Jason");
-		alert.showAndWait();
-	}
-
-	@FXML
-	public void quitter() {
-		Platform.exit();
 	}
 }

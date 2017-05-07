@@ -1,5 +1,7 @@
 package garage.model.dao;
 
-public interface DaoMarque<T, K> extends Dao<T, K> {
+import garage.model.entities.Marque;
+
+public interface DaoMarque extends Dao<Marque, String> {
 
 }

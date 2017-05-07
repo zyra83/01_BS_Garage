@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 import org.apache.commons.logging.Log;
@@ -12,18 +13,24 @@ import org.apache.commons.logging.LogFactory;
 import garage.model.dao.DaoVoiture;
 import garage.model.dao.JPAUtils;
 import garage.model.dao.exceptions.DaoException;
+import garage.model.entities.Marque;
 import garage.model.entities.Voiture;
 
-public class DaoVoitureJPA implements DaoVoiture<Voiture, String> {
+public class DaoVoitureJPA implements DaoVoiture {
 	private static final EntityManager em = JPAUtils.getEm("01BS_Garage");
 	public static final Log LOG = LogFactory.getLog(DaoVoitureJPA.class.getSimpleName());
-	
-	
+
 	@Override
 	public void create(Voiture t) throws DaoException {
-		em.getTransaction().begin();
-		em.persist(t);
-		em.getTransaction().commit();
+		try {
+			em.getTransaction().begin();
+			// attache l'instance au contexte
+			em.persist(t);
+			em.getTransaction().commit();
+		} catch (Exception e) {
+			em.getTransaction().rollback();
+			throw new DaoException("Création de voiture impossible ", e);
+		}
 	}
 
 	@Override
@@ -39,20 +46,27 @@ public class DaoVoitureJPA implements DaoVoiture<Voiture, String> {
 	public void delete(Voiture t) throws DaoException {
 		try {
 			em.getTransaction().begin();
-			// TODO ça ça va surement merder vu qu'on est hors contexte de
-			// persistance
 			em.remove(t);
 			em.getTransaction().commit();
 		} catch (Exception e) {
-			throw new DaoException(e.getMessage(), e);
+			em.getTransaction().rollback();
+			throw new DaoException("Delete de voiture impossible", e);
 		}
 	}
 
 	@Override
 	public void update(Voiture t) throws DaoException {
-		em.getTransaction().begin();
-		em.merge(t);
-		em.getTransaction().commit();
+		try {
+			em.getTransaction().begin();
+			// sauvegarde une instance dupliquée
+			em.merge(t);
+			em.getTransaction().commit();
+		} catch (Exception e) {
+			if (em.getTransaction().isActive()) {
+				em.getTransaction().rollback();
+			}
+			throw new DaoException(String.format("Dao:Update:merge impossible: %s", e.getMessage()), e);
+		}
 	}
 
 	@Override
@@ -90,6 +104,13 @@ public class DaoVoitureJPA implements DaoVoiture<Voiture, String> {
 		} catch (Exception e) {
 			throw new DaoException(e.getMessage(), e);
 		}
+	}
+
+	public long compterVoituresParMarque(Marque m) {
+		Query q = em.createNamedQuery("compterVoituresDuneMarque");
+		q.setParameter("m", m);
+		long count = (long) q.getSingleResult();
+		return count;
 	}
 
 }

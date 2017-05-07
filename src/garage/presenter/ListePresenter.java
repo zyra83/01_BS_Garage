@@ -1,21 +1,26 @@
 package garage.presenter;
 
+import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 
-import garage.model.dao.exceptions.DaoException;
 import garage.model.entities.Voiture;
 import garage.model.facade.FacadeFactory;
 import garage.model.facade.IFacadeMetier;
+import garage.model.facade.exceptions.FacadeMetierException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
@@ -55,7 +60,7 @@ public class ListePresenter {
 		Voiture v = tvVoitures.getSelectionModel().getSelectedItem();
 
 		String strDetail = String.format(
-				"Immatriculation: %s%n" + "Modèle: %s%n" + "Puissance: %s%n" + "Date de mise en circulation: %s",
+				"Immatriculation: %s%nModèle: %s%nPuissance: %s%nDate de mise en circulation: %s",
 				v.getImmatriculation(), v.getModele(), v.getPuissance(),
 				v.getMiseEnCirculation().format(DateTimeFormatter.ofPattern("dd MM YYYY")));
 
@@ -82,32 +87,39 @@ public class ListePresenter {
 
 		dialog.showAndWait();
 
-		if (log.isInfoEnabled())
-			log.info(String.format("Détail de la voiture %s.", v.toString()));
 	}
 
 	public void supprimer() {
 		Voiture v = tvVoitures.getSelectionModel().getSelectedItem();
-		Integer index = tvVoitures.getSelectionModel().getSelectedIndex();
 		try {
 			fm.supprimerVoiture(v);
 			this.lstVoitures.remove(v);
-			if (log.isInfoEnabled())
-				log.info(String.format("Supression de la voiture %s à l'index %s.", v.toString(), index.toString()));
-		} catch (DaoException e) {
-			log.error(e.getMessage(), e);
+
+		} catch (FacadeMetierException e) {
+			if (log.isErrorEnabled())
+				log.error(e);
 		}
 	}
 
 	public void modifier() {
 		Voiture v = tvVoitures.getSelectionModel().getSelectedItem();
-		Integer index = tvVoitures.getSelectionModel().getSelectedIndex();
-		// TextInputDialog tid = new TextInputDialog();
-		// tid.showAndWait();
-		// this.lstVoitures.get(index).setCoef(Integer.parseInt(tid.getResult()));
+		
+		// Demander le chargement du FXML de la vue Ajouter
+		try {
 
-		if (log.isInfoEnabled())
-			log.info(String.format("Edition du coef %s à l'index %s.", v.toString(), index.toString()));
+			FXMLLoader loader = new FXMLLoader(this.getClass().getResource("/garage/view/fx/AjouterVoiture.fxml"));
+			// TODO Passer une voiture en parametre pour modif
+			loader.setController(new CreationPresenter(v));
+			VBox vueAjouter = (VBox) loader.load();
+
+			// Recuperer une reference de la scene et changer le graphe de scene
+			Scene scene = racine.getScene();
+			scene.setRoot(vueAjouter);
+		} catch (IOException e) {
+			Alert a = new Alert(AlertType.ERROR);
+			a.setContentText(e.getMessage());
+			a.showAndWait();
+		}
 	}
 
 	@FXML
@@ -116,7 +128,7 @@ public class ListePresenter {
 			log.info(String.format("initialize, binding, chargement metier"));
 
 		// chargement des voitures
-		r1();
+		chargerListeVoitures();
 
 		this.tcImmat.setCellValueFactory(new PropertyValueFactory<>("immatriculation"));
 		this.tcMarque.setCellValueFactory(new PropertyValueFactory<>("marque"));
@@ -129,31 +141,30 @@ public class ListePresenter {
 		cbOrdered.selectedProperty().addListener((obs, wasSelected, isNowSelected) -> {
 			log.info(String.format("Checkbox: old_val:%b, new_val:%b.", wasSelected, isNowSelected));
 			if (isNowSelected) {
-				r2();
+				chargerListeVoituresParPuissance();
 			} else {
-				r1();
+				chargerListeVoitures();
 			}
 		});
-
 	}
 
-	private void r1() {
+	private void chargerListeVoitures() {
 		try {
 			lstVoitures.setAll(fm.listerLesVoitures());
-			if (log.isInfoEnabled())
-				log.info("Voitures ramenées : " + lstVoitures.size());
-		} catch (DaoException e) {
-			log.error(e.getMessage(), e);
+		} catch (FacadeMetierException e) {
+			if (log.isErrorEnabled())
+				log.error(e);
+			new Alert(AlertType.ERROR, e.getMessage()).showAndWait();
 		}
 	}
 
-	private void r2() {
+	private void chargerListeVoituresParPuissance() {
 		try {
 			lstVoitures.setAll(fm.listerLesVoituresParPuissance());
-			if (log.isInfoEnabled())
-				log.info("Voitures ramenées par puissance : " + lstVoitures.size());
-		} catch (DaoException e) {
-			log.error(e.getMessage(), e);
+		} catch (FacadeMetierException e) {
+			if (log.isErrorEnabled())
+				log.error(e);
+			new Alert(AlertType.ERROR, e.getMessage()).showAndWait();
 		}
 	}
 

@@ -2,19 +2,17 @@ package garage.model.dao;
 
 import garage.model.dao.jpa.DaoMarqueJPA;
 import garage.model.dao.jpa.DaoVoitureJPA;
-import garage.model.entities.Marque;
-import garage.model.entities.Voiture;
 
 public final class DaoFactory {
 	private DaoFactory() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public static DaoVoiture<Voiture, String> fabriquerDaoVoiture() {
+	public static DaoVoiture fabriquerDaoVoiture() {
 		return new DaoVoitureJPA();
 	}
 
-	public static DaoMarque<Marque, String> fabriquerDaoMarque() {
+	public static DaoMarque fabriquerDaoMarque() {
 		return new DaoMarqueJPA();
 	}
 }

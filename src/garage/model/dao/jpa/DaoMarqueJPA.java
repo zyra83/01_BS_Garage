@@ -11,7 +11,7 @@ import garage.model.dao.JPAUtils;
 import garage.model.dao.exceptions.DaoException;
 import garage.model.entities.Marque;
 
-public class DaoMarqueJPA implements DaoMarque<Marque, String> {
+public class DaoMarqueJPA implements DaoMarque {
 	private static final EntityManager em = JPAUtils.getEm("01BS_Garage");
 
 	@Override
@@ -19,15 +19,20 @@ public class DaoMarqueJPA implements DaoMarque<Marque, String> {
 		try {
 			return em.find(Marque.class, UUID.fromString(k));
 		} catch (Exception e) {
-			throw new DaoException(e.getMessage(), e);
+			throw new DaoException("Lecture de marque impossible ", e);
 		}
 	}
 
 	@Override
 	public void create(Marque k) throws DaoException {
-		em.getTransaction().begin();
-		em.persist(k);
-		em.getTransaction().commit();
+		try {
+			em.getTransaction().begin();
+			em.persist(k);
+			em.getTransaction().commit();
+		} catch (Exception e) {
+			em.getTransaction().rollback();
+			throw new DaoException("Création de marque impossible ", e);
+		}
 	}
 
 	@Override
@@ -36,7 +41,7 @@ public class DaoMarqueJPA implements DaoMarque<Marque, String> {
 			TypedQuery<Marque> m = em.createQuery("SELECT m FROM Marque m", Marque.class);
 			return m.getResultList();
 		} catch (Exception e) {
-			throw new DaoException(e.getMessage(), e);
+			throw new DaoException("Lecture des marques impossibles", e);
 		}
 	}
 
