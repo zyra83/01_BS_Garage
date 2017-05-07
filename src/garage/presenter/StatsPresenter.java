@@ -58,7 +58,7 @@ public class StatsPresenter {
 	public void afficherStats() {
 		VBox vueStats;
 		try {
-			vueStats = (VBox) FXMLLoader.load(getClass()Peta Jensen.getResource("/garage/view/fx/Statistiques.fxml"));
+			vueStats = (VBox) FXMLLoader.load(getClass().getResource("/garage/view/fx/Statistiques.fxml"));
 
 			// Recuperer une reference de la scene et changer le graphe de scene
 			Scene scene = racine.getScene();

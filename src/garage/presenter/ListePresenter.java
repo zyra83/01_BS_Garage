@@ -1,8 +1,6 @@
 package garage.presenter;
 
-import java.text.DateFormat;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
 
 import garage.model.dao.exceptions.DaoException;
 import garage.model.entities.Voiture;
@@ -12,15 +10,12 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
-import javafx.scene.Node;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
@@ -58,27 +53,20 @@ public class ListePresenter {
 
 	public void details() {
 		Voiture v = tvVoitures.getSelectionModel().getSelectedItem();
-		
+
 		String strDetail = String.format(
-				"Immatriculation: %s%n"
-				+ "Modèle: %s%n"
-				+ "Puissance: %s%n"
-				+ "Date de mise en circulation: %s", 
-				v.getImmatriculation(),
-				v.getModele(),
-				v.getPuissance(),
-				v.getMiseEnCirculation().format(DateTimeFormatter.ofPattern("dd MM YYYY"))
-				);
-		
-		
+				"Immatriculation: %s%n" + "Modèle: %s%n" + "Puissance: %s%n" + "Date de mise en circulation: %s",
+				v.getImmatriculation(), v.getModele(), v.getPuissance(),
+				v.getMiseEnCirculation().format(DateTimeFormatter.ofPattern("dd MM YYYY")));
+
 		// Create the custom dialog.
 		Dialog<Pair<String, String>> dialog = new Dialog<>();
 		dialog.setTitle(String.format("Details pour: %s", v.getModele()));
 		dialog.setHeaderText(String.format("Details pour: %s", v.getModele()));
 
 		// Set the icon (must be included in the project).
-		dialog.setGraphic(new ImageView(
-		 		this.getClass().getResource("/garage/view/resources/" + "wall" + ".jpg").toString()));
+		dialog.setGraphic(
+				new ImageView(this.getClass().getResource("/garage/view/resources/" + "wall" + ".jpg").toString()));
 
 		// Set the button types.
 		dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK);
@@ -104,8 +92,8 @@ public class ListePresenter {
 		try {
 			fm.supprimerVoiture(v);
 			this.lstVoitures.remove(v);
-		if (log.isInfoEnabled())
-			log.info(String.format("Supression de la voiture %s à l'index %s.", v.toString(), index.toString()));
+			if (log.isInfoEnabled())
+				log.info(String.format("Supression de la voiture %s à l'index %s.", v.toString(), index.toString()));
 		} catch (DaoException e) {
 			log.error(e.getMessage(), e);
 		}

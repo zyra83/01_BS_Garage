@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.UUID;
 
 import javax.persistence.EntityManager;
-import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
 
 import garage.model.dao.DaoMarque;

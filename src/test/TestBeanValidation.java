@@ -12,7 +12,6 @@ import org.junit.Test;
 import garage.model.dao.exceptions.DaoException;
 import garage.model.entities.Voiture;
 import garage.model.facade.FacadeFactory;
-import garage.model.facade.FacadeMetier;
 import garage.model.facade.IFacadeMetier;
 
 public class TestBeanValidation {
