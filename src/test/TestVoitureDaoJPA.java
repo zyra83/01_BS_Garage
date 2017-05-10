@@ -13,7 +13,7 @@ import garage.model.entities.VoitureFactory;
 public class TestVoitureDaoJPA {
 
 	@Test
-	public void testInsertionBDD() throws DaoException {
+	public void testInsertionBDD() throws Exception {
 
 		Marque m = null;
 

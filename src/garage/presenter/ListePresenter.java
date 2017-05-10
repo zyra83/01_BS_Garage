@@ -146,6 +146,15 @@ public class ListePresenter {
 				chargerListeVoitures();
 			}
 		});
+		
+		
+		
+		tvVoitures.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+		    log.info(newSelection);
+		});
+		
+		
+		
 	}
 
 	private void chargerListeVoitures() {

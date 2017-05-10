@@ -13,7 +13,7 @@ import garage.model.entities.VoitureFactory;
 public class TestVoitureDao {
 
 	@Test
-	public void testInsertionBDD() {
+	public void testInsertionBDD() throws Exception {
 
 		Marque m = null;
 
